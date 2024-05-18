@@ -1,25 +1,51 @@
+import 'package:arch_movie/data/shared_preferences.dart';
 import 'package:arch_movie/model/user_model.dart';
+import 'package:arch_movie/responsitory/auth_responsitory.dart';
+import 'package:arch_movie/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserViewModel extends ChangeNotifier {
-  Future<bool> saveTokenUser(UserModel userModel) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("token", userModel.token.toString());
+  bool loading = false;
+  UserModel user = UserModel();
+
+  Future getUserData(BuildContext context) async {
+    loading = true;
     notifyListeners();
-    return true;
+    final res = await AuthRepository().getUserData(
+      context: context,
+      id: 1,
+    );
+    loading = false;
+    notifyListeners();
+
+    if (res.success) {
+      user = res.result!;
+      notifyListeners();
+    } else {
+      Utils.flushBarErrorFlutter(res.message, context);
+    }
   }
 
-  Future<UserModel?> getTokenUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString("token");
+  Future<bool> saveTokenUser(String token) async {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString("token", userModel.token.toString());
+    // notifyListeners();
+    // return true;
+    return await Prefs.set<String?>(PreferencesKey.token, token);
+  }
 
-    return UserModel(token: token.toString());
+  String getTokenUser() {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String? token = prefs.getString("token");
+
+    // return UserModel(token: token.toString());
+    return Prefs.get<String>(PreferencesKey.token);
   }
 
   Future<bool> removeTokenUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("token");
-    return true;
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.remove("token");
+    // return true;
+    return await Prefs.set(PreferencesKey.token, '');
   }
 }
