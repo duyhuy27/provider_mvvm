@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +38,15 @@ class Utils {
     ));
   }
 
-  static fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  static fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  static void printJson(Map<String, dynamic> json) {
+    const coder = JsonEncoder.withIndent('    ');
+    final data = coder.convert(json);
+    log(data);
   }
 }
