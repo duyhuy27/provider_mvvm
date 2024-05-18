@@ -15,8 +15,10 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   //controller for email and password
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController(text: 'eve.holt@reqres.in');
+  final TextEditingController _passwordController =
+      TextEditingController(text: 'pistol');
 
   //flag to show/hide password
   bool _isObscure = true;
@@ -63,7 +65,8 @@ class _SignUpViewState extends State<SignUpView> {
               keyboardAppearance: Brightness.light,
               focusNode: _emailFocusNode,
               onFieldSubmitted: (value) {
-                Utils.fieldFocusChange(context, _emailFocusNode, _passwordFocusNode);
+                Utils.fieldFocusChange(
+                    context, _emailFocusNode, _passwordFocusNode);
               },
               decoration: const InputDecoration(
                 hintText: "Your email address",
@@ -90,7 +93,9 @@ class _SignUpViewState extends State<SignUpView> {
                           _isObscure = !_isObscure;
                         });
                       },
-                      icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off))),
+                      icon: Icon(_isObscure
+                          ? Icons.visibility
+                          : Icons.visibility_off))),
             ),
             SizedBox(
               height: height * .085,
@@ -103,8 +108,11 @@ class _SignUpViewState extends State<SignUpView> {
                 } else if (_passwordController.text.isEmpty) {
                   Utils.flushBarErrorFlutter("Password is empty", context);
                 } else {
-                  Map data = {"email": _emailController.text, "password": _passwordController.text};
-                  authViewModel.registerApi(data, context);
+                  authViewModel.registerApi(
+                    context: context,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  );
                   // Navigator.pushNamed(context, RoutesName.home);
                 }
               },

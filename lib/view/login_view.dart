@@ -62,7 +62,8 @@ class _LoginScreenState extends State<LoginView> {
               keyboardAppearance: Brightness.light,
               focusNode: _emailFocusNode,
               onFieldSubmitted: (value) {
-                Utils.fieldFocusChange(context, _emailFocusNode, _passwordFocusNode);
+                Utils.fieldFocusChange(
+                    context, _emailFocusNode, _passwordFocusNode);
               },
               decoration: const InputDecoration(
                 hintText: "Your email address",
@@ -89,7 +90,9 @@ class _LoginScreenState extends State<LoginView> {
                           _isObscure = !_isObscure;
                         });
                       },
-                      icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off))),
+                      icon: Icon(_isObscure
+                          ? Icons.visibility
+                          : Icons.visibility_off))),
             ),
             SizedBox(
               height: height * .085,
@@ -105,10 +108,13 @@ class _LoginScreenState extends State<LoginView> {
                   // email: eve.holt@reqres.in
                   // password: pistol
                   // Map data = {"email": _emailController.text, "password": _passwordController.text};
-                  Map data = {"email": "eve.holt@reqres.in", "password": "pistol"};
 
-                  authViewModel.loginApi(data, context);
-                  Navigator.pushNamed(context, RoutesName.home);
+                  authViewModel.loginApi(
+                    context: context,
+                    email: 'eve.holt@reqres.in',
+                    password: 'pistol',
+                  );
+                  // Navigator.pushNamed(context, RoutesName.home);
                 }
               },
               isLoading: authViewModel.isLoading,
