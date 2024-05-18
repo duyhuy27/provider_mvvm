@@ -124,7 +124,7 @@ class _SignUpViewState extends State<SignUpView> {
             RoundButton(
               title: "Login Up",
               onPressed: () {
-                Navigator.pushNamed(context, RoutesName.login);
+                Navigator.popAndPushNamed(context, RoutesName.login);
               },
               isLoading: false,
             ),

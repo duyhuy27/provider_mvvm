@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginView> {
             RoundButton(
               title: "Sign Up",
               onPressed: () {
-                Navigator.pushNamed(context, RoutesName.register);
+                Navigator.popAndPushNamed(context, RoutesName.register);
               },
               isLoading: false,
             ),
