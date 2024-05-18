@@ -1,5 +1,4 @@
 import 'package:arch_movie/utils/routes/routes.dart';
-import 'package:arch_movie/utils/routes/routes_name.dart';
 import 'package:arch_movie/view_model/auth_view_model.dart';
 import 'package:arch_movie/view_model/user_view_model.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        initialRoute: RoutesName.splash,
+        debugShowCheckedModeBanner: false,
+
+        /// initialRoute: RoutesName.splash, *** use [Root] route for splash screen to avoid unwanted route in stack
         onGenerateRoute: Routes.generateRoutes,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),

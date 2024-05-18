@@ -9,16 +9,21 @@ class Routes {
   static Route<dynamic> generateRoutes(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case RoutesName.home:
-        return MaterialPageRoute(builder: (BuildContext context) => const HomeScreen());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const HomeScreen());
       case RoutesName.login:
-        return MaterialPageRoute(builder: (BuildContext context) => const LoginView());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const LoginView());
       case RoutesName.register:
-        return MaterialPageRoute(builder: (BuildContext context) => const SignUpView());
-      case RoutesName.splash:
-        return MaterialPageRoute(builder: (BuildContext context) => const SplashScreen());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const SignUpView());
+      case RoutesName.root:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const SplashScreen());
       default:
         return MaterialPageRoute(
-            builder: (_) => const Scaffold(body: Center(child: Text('Not Found'))));
+            builder: (_) =>
+                const Scaffold(body: Center(child: Text('Not Found'))));
     }
   }
 }
