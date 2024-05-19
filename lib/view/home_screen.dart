@@ -1,8 +1,13 @@
 import 'package:arch_movie/res/component/loading_widget.dart';
 import 'package:arch_movie/utils/application.dart';
+import 'package:arch_movie/view/test.dart';
 import 'package:arch_movie/view_model/user_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+
+import '../controllers/test_controller.dart';
+import 'test_singleton.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TestController? getXcontroller;
   late UserViewModel controller;
   // UserModel? userModel = UserModel();
   // final SplashService _splashService = SplashService();
@@ -19,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    getXcontroller = Get.put(TestController());
     // _splashService.getUserData().then((user) {
     //   if (user != null || user != "") {
     //     userModel = user;
@@ -31,6 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.getUserData(context);
     });
+  }
+
+  @override
+  void dispose() {
+    Get.delete<TestController>();
+    super.dispose();
   }
 
   @override
@@ -73,6 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 15),
+                Obx(() => GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => const TestPage()));
+                        // getXcontroller?.text("from home 2");
+                      },
+                      child: item("test value", getXcontroller?.text.value),
+                    )),
                 item("Email", controller.user.email),
                 item("First Name", controller.user.firstName),
                 item("Last Name", controller.user.lastName),
@@ -80,7 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                     onPressed: () {
-                      Application.logout(context);
+                      Singleton().test();
+                      // Application.logout(context);
                     },
                     child: const Text("Logout"),
                   ),

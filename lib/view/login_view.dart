@@ -1,8 +1,10 @@
+import 'package:arch_movie/controllers/login_controller.dart';
 import 'package:arch_movie/res/component/round_button.dart';
 import 'package:arch_movie/utils/routes/routes_name.dart';
 import 'package:arch_movie/utils/utils.dart';
 import 'package:arch_movie/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
@@ -13,34 +15,27 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginView> {
-  //controller for email and password
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late final controller = LoginController(context);
 
-  //flag to show/hide password
-  bool _isObscure = true;
+  @override
+  void initState() {
+    super.initState();
+    controller.onInit();
 
-  //focus node for email and password
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.onReady();
+    });
+  }
 
-  //dispose
   @override
   void dispose() {
-    // TODO: implement dispose
+    controller.onDispose();
     super.dispose();
-
-    _emailController.dispose();
-    _passwordController.dispose();
-
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
-    final height = MediaQuery.of(context).size.height * 1;
+    // final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -57,13 +52,13 @@ class _LoginScreenState extends State<LoginView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextFormField(
-              controller: _emailController,
+              controller: controller.emailController,
               keyboardType: TextInputType.emailAddress,
               keyboardAppearance: Brightness.light,
-              focusNode: _emailFocusNode,
+              focusNode: controller.emailFocusNode,
               onFieldSubmitted: (value) {
-                Utils.fieldFocusChange(
-                    context, _emailFocusNode, _passwordFocusNode);
+                Utils.fieldFocusChange(context, controller.emailFocusNode,
+                    controller.passwordFocusNode);
               },
               decoration: const InputDecoration(
                 hintText: "Your email address",
@@ -71,56 +66,39 @@ class _LoginScreenState extends State<LoginView> {
                 prefixIcon: Icon(Icons.email),
               ),
             ),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: _isObscure,
-              focusNode: _passwordFocusNode,
-              onFieldSubmitted: (value) {
-                _passwordFocusNode.unfocus();
-              },
-              keyboardType: TextInputType.visiblePassword,
-              obscuringCharacter: "*",
-              decoration: InputDecoration(
-                  hintText: "Password",
-                  labelText: "Your password",
-                  prefixIcon: const Icon(Icons.password),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
-                      icon: Icon(_isObscure
-                          ? Icons.visibility
-                          : Icons.visibility_off))),
+            Obx(
+              () => TextFormField(
+                controller: controller.passwordController,
+                obscureText: controller.isObscure.value,
+                focusNode: controller.passwordFocusNode,
+                onFieldSubmitted: (value) {
+                  controller.passwordFocusNode.unfocus();
+                },
+                keyboardType: TextInputType.visiblePassword,
+                obscuringCharacter: "*",
+                decoration: InputDecoration(
+                    hintText: "Password",
+                    labelText: "Your password",
+                    prefixIcon: const Icon(Icons.password),
+                    suffixIcon: IconButton(
+                        onPressed: () {
+                          controller.isObscure(!controller.isObscure.value);
+                        },
+                        icon: Icon(controller.isObscure.value
+                            ? Icons.visibility
+                            : Icons.visibility_off))),
+              ),
             ),
             SizedBox(
-              height: height * .085,
+              height: 15,
             ),
-            RoundButton(
-              title: "Login",
-              onPressed: () {
-                if (_emailController.text.isEmpty) {
-                  Utils.flushBarErrorFlutter("Email is empty", context);
-                } else if (_passwordController.text.isEmpty) {
-                  Utils.flushBarErrorFlutter("Password is empty", context);
-                } else {
-                  // email: eve.holt@reqres.in
-                  // password: pistol
-                  // Map data = {"email": _emailController.text, "password": _passwordController.text};
-
-                  authViewModel.loginApi(
-                    context: context,
-                    email: 'eve.holt@reqres.in',
-                    password: 'pistol',
-                  );
-                  // Navigator.pushNamed(context, RoutesName.home);
-                }
-              },
-              isLoading: authViewModel.isLoading,
-            ),
+            Obx(() => RoundButton(
+                  title: "Login",
+                  onPressed: controller.login,
+                  isLoading: controller.loading.value,
+                )),
             SizedBox(
-              height: height * .02,
+              height: 15,
             ),
             RoundButton(
               title: "Sign Up",

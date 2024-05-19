@@ -41,6 +41,8 @@ class SplashService {
     // });
 
     if (isLogin) {
+      // get refresh token
+      // get user data
       Navigator.popAndPushNamed(context, RoutesName.home);
     } else {
       Navigator.popAndPushNamed(context, RoutesName.login);

@@ -14,6 +14,9 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  late AuthViewModel controller =
+      Provider.of<AuthViewModel>(context, listen: false);
+
   //controller for email and password
   final TextEditingController _emailController =
       TextEditingController(text: 'eve.holt@reqres.in');
@@ -42,7 +45,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
+    // final authViewModel = Provider.of<AuthViewModel>(context);
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +111,7 @@ class _SignUpViewState extends State<SignUpView> {
                 } else if (_passwordController.text.isEmpty) {
                   Utils.flushBarErrorFlutter("Password is empty", context);
                 } else {
-                  authViewModel.registerApi(
+                  controller.registerApi(
                     context: context,
                     email: _emailController.text,
                     password: _passwordController.text,
@@ -116,7 +119,7 @@ class _SignUpViewState extends State<SignUpView> {
                   // Navigator.pushNamed(context, RoutesName.home);
                 }
               },
-              isLoading: authViewModel.isLoading,
+              isLoading: controller.isLoading,
             ),
             SizedBox(
               height: height * .02,
